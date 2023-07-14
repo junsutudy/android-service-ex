@@ -2,11 +2,14 @@ package app.junsu.androidserviceex.music
 
 import android.app.Service
 import android.content.Intent
+import android.media.MediaPlayer
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import app.junsu.androidserviceex.R
 
 class MusicService : Service() {
     private val broadcastManager by lazy { LocalBroadcastManager.getInstance(this) }
+    private lateinit var player: MediaPlayer
+    private var musicPosition: Int = 0
 
     private val musics = listOf(
         R.raw.music_fine,
@@ -15,6 +18,13 @@ class MusicService : Service() {
     override fun onCreate() {
         super.onCreate()
         println("SERVICE CREATED")
+
+        // todo
+        player = MediaPlayer.create(
+            this,
+            R.raw.music_fine,
+        )
+        playMusic()
     }
 
     override fun onBind(intent: Intent?) = null
@@ -31,6 +41,27 @@ class MusicService : Service() {
     override fun onDestroy() {
         super.onDestroy()
         println("SERVICE STOPPED")
+        stopMusic()
+    }
+
+    private fun playMusic() = player.start()
+
+    private fun stopMusic() = player.run {
+        if (this.isPlaying) {
+            stop()
+        }
+    }
+
+    private fun resumeMusic() = player.run {
+        seekTo(musicPosition)
+        start()
+    }
+
+    private fun pauseMusic() = player.run {
+        if (this.isPlaying) {
+            musicPosition = this.currentPosition
+            pause()
+        }
     }
 }
 
