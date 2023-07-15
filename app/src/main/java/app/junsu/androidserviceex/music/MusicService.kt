@@ -17,8 +17,6 @@ class MusicService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        println("SERVICE CREATED")
-
         // todo
         player = MediaPlayer.create(
             this,
@@ -34,13 +32,11 @@ class MusicService : Service() {
         flags: Int,
         startId: Int,
     ): Int {
-        println("SERVICE STARTED")
         return START_NOT_STICKY
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        println("SERVICE STOPPED")
         stopMusic()
     }
 
