@@ -30,6 +30,15 @@ class MusicService2 : Service() {
 
     override fun onBind(intent: Intent?) = null
 
+    override fun onStartCommand(
+        intent: Intent?,
+        flags: Int,
+        startId: Int,
+    ): Int {
+        displayMediaController()
+        return START_NOT_STICKY
+    }
+
     @SuppressLint("MissingPermission")
     private fun displayMediaController() {
         val mediaSession = MediaSessionCompat(
