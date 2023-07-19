@@ -1,19 +1,35 @@
 package app.junsu.androidserviceex.music
 
+import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.app.Service
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.Icon
 import android.media.MediaPlayer
+import android.media.session.MediaSession
 import android.widget.RemoteViews
-import androidx.core.app.NotificationCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import app.junsu.androidserviceex.R
 
 class MusicService : Service() {
+    class MBroadcastReceiver : BroadcastReceiver() {
+        override fun onReceive(
+            context: Context?,
+            intent: Intent?,
+        ) {
+            println(intent)
+        }
+    }
+
     companion object {
         private const val NOTIFICATION_CHANNEL_ID = "notification-channel-music-player"
+
+        public const val ACTION_PLAY = "app.junsu.intent.action.ACTION_PLAY"
+        public const val ACTION_STOP = "app.junsu.intent.action.ACTION_STOP"
     }
 
     private val broadcastManager by lazy { LocalBroadcastManager.getInstance(this) }
@@ -38,7 +54,10 @@ class MusicService : Service() {
     }
 
     private fun showPlayerNotification() {
-
+        val ms = MediaSession(
+            this,
+            NOTIFICATION_CHANNEL_ID,
+        )
         val notificationLayout = RemoteViews(packageName, R.layout.layout_music_notification_player)
 
         // todo
@@ -50,13 +69,29 @@ class MusicService : Service() {
 
         notificationManager.createNotificationChannel(channel)
 
-        val builder = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
+        val builder = Notification.Builder(this, NOTIFICATION_CHANNEL_ID)
             .setSmallIcon(android.R.drawable.ic_media_play)
             // todo
-            .setContentTitle("MUSIC TITLE")
-            .setContentText("Music playing")
-            .setCustomBigContentView(notificationLayout)
+            .setContentTitle("MUSIC TITLE").setContentText("Music playing").setStyle(
+                Notification.MediaStyle().setMediaSession(ms.sessionToken),
+            ).setCustomContentView(notificationLayout).setOngoing(true)
 
+        val action = Notification.Action.Builder(
+            Icon.createWithResource(
+                this,
+                android.R.drawable.ic_media_pause,
+            ),
+            "STOP",
+            PendingIntent.getBroadcast(
+                this@MusicService,
+                0,
+                Intent(this@MusicService, MBroadcastReceiver::class.java).apply {
+                    action = ACTION_STOP
+                },
+                PendingIntent.FLAG_IMMUTABLE
+            ),
+        )
+        builder.addAction(action.build())
         val notificationId = 1000
         startForeground(notificationId, builder.build())
     }
