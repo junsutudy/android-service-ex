@@ -19,6 +19,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
+// todo
 private val musicState = MutableStateFlow(false)
 
 class MusicService : Service() {
