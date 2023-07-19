@@ -1,15 +1,10 @@
 package app.junsu.androidserviceex.music
 
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 
-class MusicActivity : AppCompatActivity() {
+class MusicActivity : AppCompatActivity() {/*
     private val broadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(
             context: Context?,
@@ -55,5 +50,25 @@ class MusicActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         stopService(Intent(applicationContext, MusicService::class.java))
+    }*/
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        startService(
+            Intent(
+                applicationContext,
+                MusicService2::class.java,
+            ),
+        )
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        stopService(
+            Intent(
+                applicationContext,
+                MusicService2::class.java,
+            ),
+        )
     }
 }
