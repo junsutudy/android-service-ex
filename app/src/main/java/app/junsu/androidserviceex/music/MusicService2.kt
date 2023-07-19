@@ -1,18 +1,36 @@
 package app.junsu.androidserviceex.music
 
+import android.Manifest
 import android.R
+import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat.Action
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.graphics.drawable.IconCompat
 import androidx.media.app.NotificationCompat
 
 class MusicService2 : Service() {
+    private val hasNotificationPermission: Boolean
+        get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.POST_NOTIFICATIONS,
+            ) != PackageManager.PERMISSION_GRANTED
+        } else {
+            // todo
+            true
+        }
+
     override fun onBind(intent: Intent?) = null
 
+    @SuppressLint("MissingPermission")
     private fun displayMediaController() {
         val mediaSession = MediaSessionCompat(
             this,
@@ -36,7 +54,7 @@ class MusicService2 : Service() {
                 ).build(),
             )
         }
-        val mediaStyle = androidx.core.app.NotificationCompat.Builder(
+        val builder = androidx.core.app.NotificationCompat.Builder(
             this,
             ID_CHANNEL_NOTIFICATION,
         ).setStyle(
@@ -59,6 +77,14 @@ class MusicService2 : Service() {
                     PendingIntent.FLAG_UPDATE_CURRENT,
                 ),
             ),
+        )
+
+        if (!hasNotificationPermission) {
+            return
+        }
+        NotificationManagerCompat.from(this).notify(
+            0,
+            builder.build(),
         )
     }
 
