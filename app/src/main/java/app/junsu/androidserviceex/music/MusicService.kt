@@ -21,7 +21,8 @@ class MusicService : Service() {
             context: Context?,
             intent: Intent?,
         ) {
-            println(intent)
+            println("INTENTINTENT")
+            println(intent?.action)
         }
     }
 
@@ -76,22 +77,39 @@ class MusicService : Service() {
                 Notification.MediaStyle().setMediaSession(ms.sessionToken),
             ).setCustomContentView(notificationLayout).setOngoing(true)
 
-        val action = Notification.Action.Builder(
-            Icon.createWithResource(
-                this,
-                android.R.drawable.ic_media_pause,
-            ),
-            "STOP",
-            PendingIntent.getBroadcast(
-                this@MusicService,
-                0,
-                Intent(this@MusicService, MBroadcastReceiver::class.java).apply {
-                    action = ACTION_STOP
-                },
-                PendingIntent.FLAG_IMMUTABLE
-            ),
+        val actions = listOf(
+            Notification.Action.Builder(
+                Icon.createWithResource(
+                    this,
+                    android.R.drawable.ic_media_pause,
+                ),
+                "STOP",
+                PendingIntent.getBroadcast(
+                    this@MusicService,
+                    0,
+                    Intent(this@MusicService, MBroadcastReceiver::class.java).apply {
+                        action = ACTION_STOP
+                    },
+                    PendingIntent.FLAG_IMMUTABLE
+                ),
+            ).build(),
+            Notification.Action.Builder(
+                Icon.createWithResource(
+                    this,
+                    android.R.drawable.ic_media_play,
+                ),
+                "PLAY",
+                PendingIntent.getBroadcast(
+                    this@MusicService,
+                    0,
+                    Intent(this@MusicService, MBroadcastReceiver::class.java).apply {
+                        action = ACTION_PLAY
+                    },
+                    PendingIntent.FLAG_IMMUTABLE
+                ),
+            ).build(),
         )
-        builder.addAction(action.build())
+        builder.setActions(*actions.toTypedArray())
         val notificationId = 1000
         startForeground(notificationId, builder.build())
     }
