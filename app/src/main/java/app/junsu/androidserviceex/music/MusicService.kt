@@ -1,13 +1,24 @@
 package app.junsu.androidserviceex.music
 
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.app.Service
+import android.content.Context
 import android.content.Intent
 import android.media.MediaPlayer
+import androidx.core.app.NotificationCompat
+import androidx.core.app.ServiceCompat.StopForegroundFlags
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import app.junsu.androidserviceex.R
 
 class MusicService : Service() {
+    companion object {
+        private const val NOTIFICATION_CHANNEL_ID = "notification-channel-music-player"
+    }
+
     private val broadcastManager by lazy { LocalBroadcastManager.getInstance(this) }
+    private val notificationManager by lazy { getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager }
     private lateinit var player: MediaPlayer
     private var musicPosition: Int = 0
 
@@ -23,6 +34,28 @@ class MusicService : Service() {
             R.raw.music_fine,
         )
         playMusic()
+
+        showPlayerNotification()
+    }
+
+    private fun showPlayerNotification() {
+        // todo
+        val channel = NotificationChannel(
+            NOTIFICATION_CHANNEL_ID,
+            "Music Player",
+            NotificationManager.IMPORTANCE_DEFAULT,
+        )
+
+        notificationManager.createNotificationChannel(channel)
+
+        val builder = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
+            .setSmallIcon(android.R.drawable.ic_media_play)
+            // todo
+            .setContentTitle("MUSIC TITLE")
+            .setContentText("Music playing")
+
+        val notificationId = 1000
+        startForeground(notificationId, builder.build())
     }
 
     override fun onBind(intent: Intent?) = null
@@ -38,6 +71,8 @@ class MusicService : Service() {
     override fun onDestroy() {
         super.onDestroy()
         stopMusic()
+        // todo
+        stopForeground(true)
     }
 
     private fun playMusic() = player.start()

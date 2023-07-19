@@ -28,7 +28,7 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1f"
+                android:layout_weight="1"
                 android:orientation="vertical">
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -58,7 +58,7 @@
                 android:layout_height="24dp"
                 android:layout_marginVertical="8dp"
                 android:layout_marginEnd="12dp"
-                android:background="null"
+                android:background="@null"
                 android:src="@android:drawable/ic_menu_close_clear_cancel" />
         </LinearLayout>
 
@@ -74,7 +74,7 @@
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_marginVertical="8dp"
-                android:background="null"
+                android:background="@null"
                 android:src="@android:drawable/ic_media_previous" />
 
             <androidx.appcompat.widget.AppCompatImageButton
@@ -82,7 +82,7 @@
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_marginVertical="8dp"
-                android:background="null"
+                android:background="@null"
                 android:src="@android:drawable/ic_media_rew" />
 
             <androidx.appcompat.widget.AppCompatImageButton
@@ -90,7 +90,7 @@
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_marginVertical="8dp"
-                android:background="null"
+                android:background="@null"
                 android:src="@android:drawable/ic_media_play" />
 
             <androidx.appcompat.widget.AppCompatImageButton
@@ -98,7 +98,7 @@
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_marginVertical="8dp"
-                android:background="null"
+                android:background="@null"
                 android:src="@android:drawable/ic_media_ff" />
 
             <androidx.appcompat.widget.AppCompatImageButton
@@ -106,7 +106,7 @@
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_marginVertical="8dp"
-                android:background="null"
+                android:background="@null"
                 android:src="@android:drawable/ic_media_next" />
         </LinearLayout>
     </LinearLayout>
