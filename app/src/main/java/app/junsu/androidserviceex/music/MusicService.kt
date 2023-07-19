@@ -14,6 +14,12 @@ import android.media.session.MediaSession
 import android.widget.RemoteViews
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import app.junsu.androidserviceex.R
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
+
+private val musicState = MutableStateFlow(false)
 
 class MusicService : Service() {
     class MBroadcastReceiver : BroadcastReceiver() {
@@ -22,7 +28,14 @@ class MusicService : Service() {
             intent: Intent?,
         ) {
             println("INTENTINTENT")
-            println(intent?.action)
+            val action = intent?.action
+            action?.let {
+                println()
+                when (action) {
+                    ACTION_PLAY -> musicState.value = true
+                    ACTION_STOP -> musicState.value = false
+                }
+            }
         }
     }
 
@@ -52,6 +65,20 @@ class MusicService : Service() {
         playMusic()
 
         showPlayerNotification()
+        observeMusicState()
+    }
+
+    private fun observeMusicState() {
+        CoroutineScope(Dispatchers.Main).launch {
+            musicState.collect {
+                println("MUSICMUSIC ${musicState.value}")
+                if (musicState.value) {
+                    playMusic()
+                } else {
+                    pauseMusic()
+                }
+            }
+        }
     }
 
     private fun showPlayerNotification() {
