@@ -1,14 +1,13 @@
 package app.junsu.androidserviceex.music
 
-import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.media.MediaPlayer
+import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
-import androidx.core.app.ServiceCompat.StopForegroundFlags
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import app.junsu.androidserviceex.R
 
@@ -39,6 +38,9 @@ class MusicService : Service() {
     }
 
     private fun showPlayerNotification() {
+
+        val notificationLayout = RemoteViews(packageName, R.layout.layout_music_notification_player)
+
         // todo
         val channel = NotificationChannel(
             NOTIFICATION_CHANNEL_ID,
@@ -53,6 +55,7 @@ class MusicService : Service() {
             // todo
             .setContentTitle("MUSIC TITLE")
             .setContentText("Music playing")
+            .setCustomBigContentView(notificationLayout)
 
         val notificationId = 1000
         startForeground(notificationId, builder.build())
